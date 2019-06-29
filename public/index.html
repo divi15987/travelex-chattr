@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+     <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+   
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+    <h1 class="text-center"Chatter APP></h1>
+    <form class="well">
+        <textarea name="tamsg" id="tamsg" cols="30" rows="10"></textarea>
+        <input type="text" class="form-control" id="txtMsg">
+        <button class="btn btn-sucess" id="btnSend">Send</button>
+    </form>
+</div>
+    <script> 
+      
+
+       $(document).ready(function(){
+        const socket=io.connect("/");
+        let chatterName;
+       socket.on("acknowledge",(data)=>{
+           console.log(data.message);
+           chatterName=prompt("Please Enter Name")
+       })
+       $("#btnSend").on("click",(event)=>{
+           event.preventDefault();
+           let message=$("#txtMsg").val();
+           socket.emit("MsgToServer",chatterName,message);
+           $("#txtMsg").val('');
+       })
+       socket.on('MsgToClient', function(username,msg){
+      $('#tamsg').append(username+":"+msg+"\n");
+    });
+       })
+        </script>
+</body>
+</html>
